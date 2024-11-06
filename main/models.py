@@ -1,7 +1,6 @@
 # models.py
 from django.db import models
 from django.contrib.auth.models import User
-from ckeditor.fields import RichTextField
 
 
 
@@ -39,7 +38,7 @@ class Student(models.Model):
 class Topic(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    content = RichTextField(blank=True)
+    content = models.TextField(blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='topics')
 
     def __str__(self):
@@ -48,7 +47,7 @@ class Topic(models.Model):
  
 class PastQuestions(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='past_questions')
-    content = RichTextField(blank=True)
+    content = models.TextField(blank=True)
     year = models.CharField(max_length=4, help_text="Year of the examination")  # To track different years of questions
     uploaded_at = models.DateTimeField(auto_now_add=True)  # To keep track of when the question was added
 
@@ -57,7 +56,7 @@ class PastQuestions(models.Model):
 
 class KeyPoints(models.Model):
     past_question = models.ForeignKey(PastQuestions, on_delete=models.CASCADE, related_name='key_points')
-    content = RichTextField(help_text="Key points or brief answers related to past questions", blank=True)
+    content = models.TextField(help_text="Key points or brief answers related to past questions", blank=True)
     
     def __str__(self):
         return f'Key Points for {self.past_question.course.name} ({self.past_question.year})'
@@ -76,7 +75,7 @@ class CBTQuestion(models.Model):
 
 class PracticeExplanations(models.Model):
     cbt_question = models.ForeignKey(CBTQuestion, on_delete=models.CASCADE, related_name='explanations')
-    explanation = RichTextField(help_text="Explanation for the correct answer in CBT")
+    explanation = models.TextField(help_text="Explanation for the correct answer in CBT")
 
     def __str__(self):
         return f'Explanation for {self.cbt_question.course.name} CBT Question'
